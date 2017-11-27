@@ -1,0 +1,30 @@
+- name: vim config
+  file:
+    owner: ubuntu
+    path: /home/ubuntu/.vimrc
+    mode: 0644
+    state: touch
+- name: inputrc
+  lineinfile:
+    owner: ubuntu
+    path: /home/ubuntu/.inputrc
+    line: 'set editing-mode vi'
+    create: yes
+- name: vim directories
+  file:
+    owner: ubuntu
+    path: "/home/ubuntu/.vim/{{item}}"
+    state: directory
+    mode: 0755
+  with_items:
+    - bundle
+    - autoload
+- name: install vundle
+  git:
+    repo: https://github.com/gmarik/Vundle.vim.git
+    dest: /home/ubuntu/.vim/bundle/Vundle.vim
+- name: extra vim config
+  blockinfile:
+    path: /home/ubuntu/.vimrc
+    marker: "\" {mark} from playbook"
+    block:  "{{ lookup('file', '/home/ubuntu/.ansible/roles/vim/files/vimrc') }}"

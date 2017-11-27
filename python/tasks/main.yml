@@ -1,0 +1,21 @@
+- name: install pip virtualenv etc
+  apt:
+    name='{{item}}' state=latest
+  with_items:
+    - python-pip
+    - python3-pip
+    - virtualenv
+    - virtualenvwrapper
+- name: virtualenv config for bash-profile
+  blockinfile:
+    create: true
+    path: /home/ubuntu/.bash-profile
+    marker: "\" {mark} from playbook"
+    block:  "{{ lookup('file', '/vagrant/bash-profile') }}"
+- name: python testing packages
+  pip:
+    name: "{{item}}"
+    executable: pip3
+  with_items:
+    - pytest
+    - ptvsd
