@@ -27,4 +27,4 @@
   blockinfile:
     path: /home/ubuntu/.vimrc
     marker: "\" {mark} from playbook"
-    block:  "{{ lookup('file', '/home/ubuntu/.ansible/roles/vim/files/vimrc') }}"
+    block:  "{{ lookup('file', 'vimrc') }}"

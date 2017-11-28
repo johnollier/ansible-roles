@@ -11,7 +11,7 @@
     create: true
     path: /home/ubuntu/.bash-profile
     marker: "\" {mark} from playbook"
-    block:  "{{ lookup('file', '/vagrant/bash-profile') }}"
+    block:  "{{ lookup('file', 'bash-profile') }}"
 - name: python testing packages
   pip:
     name: "{{item}}"
