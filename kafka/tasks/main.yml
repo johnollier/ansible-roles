@@ -1,0 +1,43 @@
+- name: install java zookeeper etc
+  apt:
+    name: "{{item}}"
+    update_cache: yes
+  with_items:
+    - unzip
+    - openjdk-8-jdk
+    - zookeeperd
+- name: zookeeper servers in zoo.cfg
+  blockinfile:
+    path: /etc/zookeeper/conf/zoo.cfg
+    marker: "# {mark} from playbook"
+    block:  |
+      server.1=192.168.2.21:2888:3888
+      server.2=192.168.2.22:2888:3888
+      server.3=192.168.2.23:2888:3888
+- name: zookeeper id file
+  template: src=myid.j2 dest=/var/lib/zookeeper/myid
+  notify: restart_zookeeper
+- name: ensure zookeeper is running
+  service: name=zookeeper state=started enabled=yes
+- name: Download kafka binary
+  get_url:
+    url: "http://mirror.ox.ac.uk/sites/rsync.apache.org/kafka/{{ kafka_version }}/{{kafka_dir}}.tgz"
+    dest: "/tmp/{{kafka_dir}}.tgz"
+    mode: 0755
+  register: new_kafka_tar
+- name: Unarchive kafka
+  unarchive:
+    src: "/tmp/{{kafka_dir}}.tgz"
+    dest: /usr/local/
+    copy: no
+    owner: ubuntu
+  when: new_kafka_tar|changed
+- name: set broker id
+  lineinfile:
+    path: "/usr/local/{{kafka_dir}}/config/server.properties"
+    regexp: '^broker.id='
+    line: 'broker.id={{node_number}}'
+- name: start kafka
+  environment:
+    JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+  shell: "/usr/local/{{kafka_dir}}/bin/kafka-server-start.sh -daemon /usr/local/{{kafka_dir}}/config/server.properties"

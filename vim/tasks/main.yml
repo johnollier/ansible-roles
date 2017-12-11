@@ -19,6 +19,8 @@
   with_items:
     - bundle
     - autoload
+- name: cmake required for YouCompleteMe
+  apt: name=cmake update_cache=yes
 - name: install vundle
   git:
     repo: https://github.com/gmarik/Vundle.vim.git
