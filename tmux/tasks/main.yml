@@ -1,0 +1,11 @@
+- name: tmux config
+  file:
+    owner: ubuntu
+    path: /home/vagrant/.tmux.conf
+    mode: 0644
+    state: touch
+- name: extra tmux config
+  blockinfile:
+    path: /home/vagrant/.tmux.conf
+    marker: "\" {mark} from playbook"
+    block:  "{{ lookup('file', 'tmux.conf') }}"
