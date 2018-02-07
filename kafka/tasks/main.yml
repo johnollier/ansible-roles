@@ -30,7 +30,7 @@
     src: "/tmp/{{kafka_dir}}.tgz"
     dest: /usr/local/
     copy: no
-    owner: ubuntu
+    owner: vagrant
   when: new_kafka_tar|changed
 - name: set broker id
   lineinfile:

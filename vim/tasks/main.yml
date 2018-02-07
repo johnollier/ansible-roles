@@ -1,18 +1,18 @@
 - name: vim config
   file:
-    owner: ubuntu
+    owner: vagrant
     path: /home/vagrant/.vimrc
     mode: 0644
     state: touch
 - name: inputrc
   lineinfile:
-    owner: ubuntu
+    owner: vagrant
     path: /home/vagrant/.inputrc
     line: 'set editing-mode vi'
     create: yes
 - name: vim directories
   file:
-    owner: ubuntu
+    owner: vagrant
     path: "/home/vagrant/.vim/{{item}}"
     state: directory
     mode: 0755
@@ -25,6 +25,8 @@
   git:
     repo: https://github.com/gmarik/Vundle.vim.git
     dest: /home/vagrant/.vim/bundle/Vundle.vim
+    # then cd ~/.vim/bundle/YouCompleteMe
+    # ./install.py --clang-completer
 - name: extra vim config
   blockinfile:
     path: /home/vagrant/.vimrc
